@@ -47,7 +47,11 @@ const AppContext = createContext<AppState | null>(null);
 const STORAGE_KEY = "vitrine-local:state";
 const MAX_DISTANCE_KM = 80;
 
-type Persisted = { cityId?: string; cart?: CartItem[]; favorites?: string[] };
+type Persisted = {
+  cityId?: string | null;
+  cart?: CartItem[];
+  favorites?: string[];
+};
 
 function readPersisted(): Persisted {
   try {
@@ -82,7 +86,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!hydrated) return;
-    const payload: Persisted = { cityId: city?.id, cart, favorites };
+    const payload: Persisted = { cityId: city?.id ?? null, cart, favorites };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
@@ -128,7 +132,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const addToCart = useCallback((item: Omit<CartItem, "id">) => {
     setCart((prev) => {
       const differentMerchant =
-        prev.length > 0 && prev[0].merchantId !== item.merchantId;
+        prev.length > 0 && prev[0]?.merchantId !== item.merchantId;
       const base = differentMerchant ? [] : prev;
       const signature = (i: Omit<CartItem, "id">) =>
         `${i.productId}|${i.options.map((o) => o.choiceId).sort().join(",")}|${i.note ?? ""}`;
