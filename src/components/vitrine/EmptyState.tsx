@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, type LinkProps } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
 
 export function EmptyState({
@@ -13,7 +13,7 @@ export function EmptyState({
   title: string;
   description: string;
   actionLabel?: string;
-  actionTo?: string;
+  actionTo?: LinkProps["to"];
   onAction?: () => void;
 }) {
   return (

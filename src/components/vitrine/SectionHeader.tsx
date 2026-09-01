@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, type LinkProps } from "@tanstack/react-router";
 
 export function SectionHeader({
   title,
@@ -7,7 +7,7 @@ export function SectionHeader({
 }: {
   title: string;
   actionLabel?: string;
-  actionTo?: string;
+  actionTo?: LinkProps["to"];
 }) {
   return (
     <div className="flex items-end justify-between gap-3 px-5">

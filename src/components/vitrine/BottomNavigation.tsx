@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, type LinkProps } from "@tanstack/react-router";
 import { Home, Search, ShoppingBag, ReceiptText, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -55,7 +55,7 @@ function NavItem({
   icon: Icon,
   exact,
 }: {
-  to: string;
+  to: LinkProps["to"];
   label: string;
   icon: typeof Home;
   exact: boolean;
