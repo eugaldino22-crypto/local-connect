@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, type LinkProps } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -10,7 +10,7 @@ export function PageHeader({
 }: {
   title: string;
   subtitle?: string;
-  backTo?: string;
+  backTo?: LinkProps["to"];
   action?: ReactNode;
 }) {
   return (
