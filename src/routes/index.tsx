@@ -6,7 +6,7 @@ import { AppShell } from "@/components/vitrine/AppShell";
 import { CategoryCarousel } from "@/components/vitrine/CategoryCarousel";
 import { EmptyState } from "@/components/vitrine/EmptyState";
 import { LocationHeader } from "@/components/vitrine/LocationHeader";
-import { MerchantCarousel } from "@/components/vitrine/MerchantCard";
+import { MerchantCard, MerchantCarousel } from "@/components/vitrine/MerchantCard";
 import { ProductRailCard } from "@/components/vitrine/ProductCard";
 import { ProductSheet } from "@/components/vitrine/ProductSheet";
 import { PromoBanner } from "@/components/vitrine/PromoBanner";
@@ -113,9 +113,7 @@ function Home() {
         <SectionHeader title="Populares na sua cidade" actionTo="/mapa" actionLabel="Ver mapa" />
         <div className="space-y-3 px-5 pt-3">
           {popular.map((merchant) => (
-            <div key={merchant.id}>
-              <MerchantRow merchantId={merchant.id} />
-            </div>
+            <MerchantCard key={merchant.id} merchant={merchant} variant="row" />
           ))}
         </div>
         <p className="px-5 pt-4 text-xs text-muted-foreground">
@@ -131,11 +129,4 @@ function Home() {
       />
     </AppShell>
   );
-}
-
-function MerchantRow({ merchantId }: { merchantId: string }) {
-  const merchant = getMerchantById(merchantId);
-  if (!merchant) return null;
-  const { MerchantCard } = require("@/components/vitrine/MerchantCard");
-  return <MerchantCard merchant={merchant} variant="row" />;
 }
