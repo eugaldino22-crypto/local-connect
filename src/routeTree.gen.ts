@@ -10,33 +10,73 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BuscarRouteImport } from './routes/buscar'
+import { Route as CarrinhoRouteImport } from './routes/carrinho'
+import { Route as CategoriasRouteImport } from './routes/categorias'
+import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BuscarRoute = BuscarRouteImport.update({
+  id: '/buscar',
+  path: '/buscar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CarrinhoRoute = CarrinhoRouteImport.update({
+  id: '/carrinho',
+  path: '/carrinho',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriasRoute = CategoriasRouteImport.update({
+  id: '/categorias',
+  path: '/categorias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LojaSlugRoute = LojaSlugRouteImport.update({
+  id: '/loja/$slug',
+  path: '/loja/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/buscar': typeof BuscarRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/categorias': typeof CategoriasRoute
+  '/loja/$slug': typeof LojaSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/buscar': typeof BuscarRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/categorias': typeof CategoriasRoute
+  '/loja/$slug': typeof LojaSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/buscar': typeof BuscarRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/categorias': typeof CategoriasRoute
+  '/loja/$slug': typeof LojaSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/buscar' | '/carrinho' | '/categorias' | '/loja/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/buscar' | '/carrinho' | '/categorias' | '/loja/$slug'
+  id: '__root__' | '/' | '/buscar' | '/carrinho' | '/categorias' | '/loja/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BuscarRoute: typeof BuscarRoute
+  CarrinhoRoute: typeof CarrinhoRoute
+  CategoriasRoute: typeof CategoriasRoute
+  LojaSlugRoute: typeof LojaSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +88,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/buscar': {
+      id: '/buscar'
+      path: '/buscar'
+      fullPath: '/buscar'
+      preLoaderRoute: typeof BuscarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/carrinho': {
+      id: '/carrinho'
+      path: '/carrinho'
+      fullPath: '/carrinho'
+      preLoaderRoute: typeof CarrinhoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categorias': {
+      id: '/categorias'
+      path: '/categorias'
+      fullPath: '/categorias'
+      preLoaderRoute: typeof CategoriasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/loja/$slug': {
+      id: '/loja/$slug'
+      path: '/loja/$slug'
+      fullPath: '/loja/$slug'
+      preLoaderRoute: typeof LojaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BuscarRoute: BuscarRoute,
+  CarrinhoRoute: CarrinhoRoute,
+  CategoriasRoute: CategoriasRoute,
+  LojaSlugRoute: LojaSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
