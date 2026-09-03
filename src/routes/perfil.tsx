@@ -17,7 +17,7 @@ import { AppShell } from "@/components/vitrine/AppShell";
 import { ProtectedRoute } from "@/components/protected-route";
 import { savedAddresses } from "@/data/catalog";
 import { useApp } from "@/store/app-store";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import type { LinkProps } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/perfil")({
