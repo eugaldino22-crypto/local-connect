@@ -90,7 +90,7 @@ function FavoritesPage() {
         </div>
       )}
 
-      <ProductSheet product={selected} onClose={() => setSelected(null)} />
+      <ProductSheet product={selected} onOpenChange={(open) => { if (!open) setSelected(null); }} />
     </AppShell>
   );
 }
