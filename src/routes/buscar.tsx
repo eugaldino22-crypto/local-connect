@@ -32,9 +32,9 @@ const filters: { id: SearchFilter; label: string }[] = [
 export const Route = createFileRoute("/buscar")({
   validateSearch: (search: Record<string, unknown>): SearchParams => {
     const out: SearchParams = {};
-    if (typeof search.q === "string") out.q = search.q;
-    if (typeof search.categoria === "string") out.categoria = search.categoria;
-    if (typeof search.filtro === "string") out.filtro = search.filtro;
+    if (typeof search['q'] === "string") out['q'] = search['q'];
+    if (typeof search['categoria'] === "string") out['categoria'] = search['categoria'];
+    if (typeof search['filtro'] === "string") out['filtro'] = search['filtro'];
     return out;
   },
   head: () => ({
@@ -57,12 +57,12 @@ export const Route = createFileRoute("/buscar")({
 
 function SearchPage() {
   const params = Route.useSearch();
-  const [term, setTerm] = useState(params.q ?? "");
+  const [term, setTerm] = useState(params['q'] ?? "");
   const [filter, setFilter] = useState<SearchFilter | null>(
-    (filters.find((f) => f.id === params.filtro)?.id ?? null) as SearchFilter | null,
+    (filters.find((f) => f.id === params['filtro'])?.id ?? null) as SearchFilter | null,
   );
   const [categoryId, setCategoryId] = useState<string | null>(
-    categories.find((c) => c.slug === params.categoria)?.id ?? null,
+    categories.find((c) => c.slug === params['categoria'])?.id ?? null,
   );
   const [selected, setSelected] = useState<Product | null>(null);
 

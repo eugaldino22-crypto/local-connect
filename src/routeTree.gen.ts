@@ -13,7 +13,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as CarrinhoRouteImport } from './routes/carrinho'
 import { Route as CategoriasRouteImport } from './routes/categorias'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
+import { Route as MapaRouteImport } from './routes/mapa'
+import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
+import { Route as PedidosIndexRouteImport } from './routes/pedidos.index'
+import { Route as PedidosOrderIdRouteImport } from './routes/pedidos.$orderId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,9 +41,39 @@ const CategoriasRoute = CategoriasRouteImport.update({
   path: '/categorias',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapaRoute = MapaRouteImport.update({
+  id: '/mapa',
+  path: '/mapa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LojaSlugRoute = LojaSlugRouteImport.update({
   id: '/loja/$slug',
   path: '/loja/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PedidosIndexRoute = PedidosIndexRouteImport.update({
+  id: '/pedidos/',
+  path: '/pedidos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PedidosOrderIdRoute = PedidosOrderIdRouteImport.update({
+  id: '/pedidos/$orderId',
+  path: '/pedidos/$orderId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -46,14 +82,26 @@ export interface FileRoutesByFullPath {
   '/buscar': typeof BuscarRoute
   '/carrinho': typeof CarrinhoRoute
   '/categorias': typeof CategoriasRoute
+  '/checkout': typeof CheckoutRoute
+  '/favoritos': typeof FavoritosRoute
+  '/mapa': typeof MapaRoute
+  '/perfil': typeof PerfilRoute
   '/loja/$slug': typeof LojaSlugRoute
+  '/pedidos/$orderId': typeof PedidosOrderIdRoute
+  '/pedidos/': typeof PedidosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/buscar': typeof BuscarRoute
   '/carrinho': typeof CarrinhoRoute
   '/categorias': typeof CategoriasRoute
+  '/checkout': typeof CheckoutRoute
+  '/favoritos': typeof FavoritosRoute
+  '/mapa': typeof MapaRoute
+  '/perfil': typeof PerfilRoute
   '/loja/$slug': typeof LojaSlugRoute
+  '/pedidos/$orderId': typeof PedidosOrderIdRoute
+  '/pedidos': typeof PedidosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,14 +109,54 @@ export interface FileRoutesById {
   '/buscar': typeof BuscarRoute
   '/carrinho': typeof CarrinhoRoute
   '/categorias': typeof CategoriasRoute
+  '/checkout': typeof CheckoutRoute
+  '/favoritos': typeof FavoritosRoute
+  '/mapa': typeof MapaRoute
+  '/perfil': typeof PerfilRoute
   '/loja/$slug': typeof LojaSlugRoute
+  '/pedidos/$orderId': typeof PedidosOrderIdRoute
+  '/pedidos/': typeof PedidosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/buscar' | '/carrinho' | '/categorias' | '/loja/$slug'
+  fullPaths:
+    | '/'
+    | '/buscar'
+    | '/carrinho'
+    | '/categorias'
+    | '/checkout'
+    | '/favoritos'
+    | '/mapa'
+    | '/perfil'
+    | '/loja/$slug'
+    | '/pedidos/$orderId'
+    | '/pedidos/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/buscar' | '/carrinho' | '/categorias' | '/loja/$slug'
-  id: '__root__' | '/' | '/buscar' | '/carrinho' | '/categorias' | '/loja/$slug'
+  to:
+    | '/'
+    | '/buscar'
+    | '/carrinho'
+    | '/categorias'
+    | '/checkout'
+    | '/favoritos'
+    | '/mapa'
+    | '/perfil'
+    | '/loja/$slug'
+    | '/pedidos/$orderId'
+    | '/pedidos'
+  id:
+    | '__root__'
+    | '/'
+    | '/buscar'
+    | '/carrinho'
+    | '/categorias'
+    | '/checkout'
+    | '/favoritos'
+    | '/mapa'
+    | '/perfil'
+    | '/loja/$slug'
+    | '/pedidos/$orderId'
+    | '/pedidos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,7 +164,13 @@ export interface RootRouteChildren {
   BuscarRoute: typeof BuscarRoute
   CarrinhoRoute: typeof CarrinhoRoute
   CategoriasRoute: typeof CategoriasRoute
+  CheckoutRoute: typeof CheckoutRoute
+  FavoritosRoute: typeof FavoritosRoute
+  MapaRoute: typeof MapaRoute
+  PerfilRoute: typeof PerfilRoute
   LojaSlugRoute: typeof LojaSlugRoute
+  PedidosOrderIdRoute: typeof PedidosOrderIdRoute
+  PedidosIndexRoute: typeof PedidosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -109,11 +203,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mapa': {
+      id: '/mapa'
+      path: '/mapa'
+      fullPath: '/mapa'
+      preLoaderRoute: typeof MapaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/loja/$slug': {
       id: '/loja/$slug'
       path: '/loja/$slug'
       fullPath: '/loja/$slug'
       preLoaderRoute: typeof LojaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pedidos/': {
+      id: '/pedidos/'
+      path: '/pedidos'
+      fullPath: '/pedidos/'
+      preLoaderRoute: typeof PedidosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pedidos/$orderId': {
+      id: '/pedidos/$orderId'
+      path: '/pedidos/$orderId'
+      fullPath: '/pedidos/$orderId'
+      preLoaderRoute: typeof PedidosOrderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -124,7 +260,13 @@ const rootRouteChildren: RootRouteChildren = {
   BuscarRoute: BuscarRoute,
   CarrinhoRoute: CarrinhoRoute,
   CategoriasRoute: CategoriasRoute,
+  CheckoutRoute: CheckoutRoute,
+  FavoritosRoute: FavoritosRoute,
+  MapaRoute: MapaRoute,
+  PerfilRoute: PerfilRoute,
   LojaSlugRoute: LojaSlugRoute,
+  PedidosOrderIdRoute: PedidosOrderIdRoute,
+  PedidosIndexRoute: PedidosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

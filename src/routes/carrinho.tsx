@@ -53,7 +53,7 @@ function CartPage() {
     <AppShell>
       <PageHeader
         title="Carrinho"
-        subtitle={merchant?.name}
+        {...(merchant ? { subtitle: merchant.name } : {})}
         action={
           <button
             type="button"
