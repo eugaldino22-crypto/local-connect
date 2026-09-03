@@ -1,7 +1,23 @@
+import { CakeSlice, CupSoda, Hamburger, Pill, Pizza, ShoppingBag, ShoppingCart, Wheat, type LucideIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import { cn } from "@/lib/utils";
 import type { Category } from "@/types";
+
+function getCategoryIcon(slug: string): LucideIcon {
+  return categoryIcons[slug] ?? ShoppingBag;
+}
+
+const categoryIcons: Record<string, LucideIcon> = {
+  lanches: Hamburger,
+  pizza: Pizza,
+  mercado: ShoppingCart,
+  farmacia: Pill,
+  padaria: Wheat,
+  doces: CakeSlice,
+  lojas: ShoppingBag,
+  bebidas: CupSoda,
+};
 
 export function CategoryCard({
   category,
@@ -12,6 +28,7 @@ export function CategoryCard({
   active?: boolean;
   onClick?: () => void;
 }) {
+  const Icon = getCategoryIcon(category.slug);
   const content = (
     <>
       <span
@@ -20,7 +37,7 @@ export function CategoryCard({
           active && "bg-primary text-primary-foreground ring-primary",
         )}
       >
-        {category.emoji}
+        <Icon className="size-7" strokeWidth={2} />
       </span>
       <span className="w-16 truncate text-center text-[11px] font-bold">
         {category.name}

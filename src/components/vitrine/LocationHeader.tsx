@@ -6,7 +6,7 @@ import { CitySelector } from "./CitySelector";
 import { useApp } from "@/store/app-store";
 
 export function LocationHeader() {
-  const { city, locationStatus, requestLocation } = useApp();
+  const { city, locationStatus, requestLocation, userLocation, detectedLocationLabel, avatarUrl } = useApp();
   const [open, setOpen] = useState(false);
 
   // Tenta detectar a localização assim que o app abre, sem cidade fixa como fallback.
@@ -16,15 +16,17 @@ export function LocationHeader() {
 
   const loading = locationStatus === "loading";
 
-  const label = city
-    ? `${city.name} · ${city.state}`
-    : loading
-      ? "Detectando sua região..."
-      : locationStatus === "denied" || locationStatus === "unsupported"
-        ? "Escolher cidade"
-        : locationStatus === "unserved"
-          ? "Região sem atendimento"
-          : "Escolher cidade";
+  const label = locationStatus === "granted" && userLocation
+    ? (detectedLocationLabel ?? "Localização atual")
+    : city
+      ? `${city.name} · ${city.state}`
+      : loading
+        ? "Detectando sua região..."
+        : locationStatus === "denied" || locationStatus === "unsupported"
+          ? "Escolher cidade"
+          : locationStatus === "unserved"
+            ? "Região sem atendimento"
+            : "Escolher cidade";
 
   return (
     <header className="sticky top-0 z-30 bg-background/95 backdrop-blur">
@@ -43,9 +45,6 @@ export function LocationHeader() {
             )}
           </span>
           <span className="min-w-0">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-              Entregar em
-            </span>
             <span className="flex min-w-0 items-center gap-1">
               <span className="truncate text-sm font-bold">{label}</span>
               <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
@@ -54,20 +53,28 @@ export function LocationHeader() {
         </button>
 
         <div className="flex shrink-0 items-center gap-2">
-          <button
-            type="button"
+          <Link
+            to="/notificacoes"
             aria-label="Notificações"
             className="press relative grid size-10 place-items-center rounded-2xl bg-secondary"
           >
             <Bell className="size-[18px]" strokeWidth={2.2} />
             <span className="absolute right-2.5 top-2.5 size-2 rounded-full bg-primary ring-2 ring-secondary" />
-          </button>
+          </Link>
           <Link
             to="/perfil"
             aria-label="Meu perfil"
             className="press grid size-10 place-items-center rounded-2xl bg-foreground text-[13px] font-bold text-background"
           >
-            VL
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt="Foto de perfil"
+                className="h-full w-full rounded-2xl object-cover"
+              />
+            ) : (
+              "VL"
+            )}
           </Link>
         </div>
       </div>

@@ -28,6 +28,8 @@ export type Merchant = {
   categoryId: string;
   categoryName: string;
   cityId: string;
+  latitude?: number;
+  longitude?: number;
   cover: string;
   logoEmoji: string;
   rating: number;
@@ -131,6 +133,8 @@ export type Address = {
   reference?: string;
   district: string;
   cityId: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 export type SearchFilter =

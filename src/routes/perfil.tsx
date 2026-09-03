@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Bell,
@@ -9,6 +10,7 @@ import {
   MapPin,
   ReceiptText,
   Store,
+  Camera,
 } from "lucide-react";
 
 import { AppShell } from "@/components/vitrine/AppShell";
@@ -93,20 +95,70 @@ const groups: { title: string; items: Item[] }[] = [
 ];
 
 function ProfilePage() {
-  const { city, favorites } = useApp();
+  const { city, favorites, avatarUrl, setAvatarUrl, locationStatus, userLocation, detectedLocationLabel } = useApp();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const address = savedAddresses[0];
+
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setAvatarUrl(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(file);
+    event.target.value = "";
+  };
 
   return (
     <AppShell>
       <header className="px-5 pt-6">
         <div className="flex items-center gap-4">
-          <span className="grid size-16 shrink-0 place-items-center rounded-3xl bg-foreground text-lg font-bold text-background">
-            VL
-          </span>
+          <div className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="relative grid size-16 place-items-center overflow-hidden rounded-full bg-foreground text-lg font-bold text-background"
+              aria-label="Adicionar foto de perfil"
+            >
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="Foto de perfil"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                "VL"
+              )}
+
+              <span className="absolute bottom-0 right-0 grid size-6 place-items-center rounded-full border-2 border-background bg-primary text-primary-foreground">
+                <Camera className="size-3.5" />
+              </span>
+            </button>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleAvatarChange}
+            />
+          </div>
           <div className="min-w-0">
             <h1 className="truncate text-xl font-bold">Visitante</h1>
             <p className="truncate text-sm text-muted-foreground">
-              {city ? `${city.name} · ${city.state}` : "Cidade não definida"}
+              {locationStatus === "granted" && userLocation ? detectedLocationLabel ? `📍 ${detectedLocationLabel}` : "📍 Localização atual" : city ? `${city.name} · ${city.state}` : "Localização não definida"}
             </p>
           </div>
         </div>

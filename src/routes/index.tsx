@@ -116,11 +116,6 @@ function Home() {
             <MerchantCard key={merchant.id} merchant={merchant} variant="row" />
           ))}
         </div>
-        <p className="px-5 pt-4 text-xs text-muted-foreground">
-          {city
-            ? `Mostrando estabelecimentos em ${city.name} · ${city.state}.`
-            : "Escolha sua cidade para ver estabelecimentos próximos."}
-        </p>
       </section>
 
       <ProductSheet

@@ -12,6 +12,12 @@ import { cities } from "@/data/catalog";
 import { distanceBetween } from "@/lib/format";
 import type { CartItem, City } from "@/types";
 
+export type UserLocation = {
+  latitude: number;
+  longitude: number;
+  accuracy: number;
+};
+
 export type LocationStatus =
   | "idle"
   | "loading"
@@ -25,6 +31,10 @@ type AppState = {
   /** Localização */
   locationStatus: LocationStatus;
   city: City | null;
+  userLocation: UserLocation | null;
+  detectedLocationLabel: string | null;
+  avatarUrl: string | null;
+  setAvatarUrl: (url: string | null) => void;
   requestLocation: () => void;
   selectCity: (city: City) => void;
   /** Carrinho */
@@ -47,7 +57,37 @@ const AppContext = createContext<AppState | null>(null);
 const STORAGE_KEY = "vitrine-local:state";
 const MAX_DISTANCE_KM = 80;
 
+const MAPBOX_TOKEN = import.meta.env["VITE_MAPBOX_ACCESS_TOKEN"];
+
+async function reverseGeocode(latitude: number, longitude: number): Promise<string | null> {
+  if (!MAPBOX_TOKEN) return null;
+
+  try {
+    const url = new URL("https://api.mapbox.com/search/geocode/v6/reverse");
+    url.searchParams.set("longitude", String(longitude));
+    url.searchParams.set("latitude", String(latitude));
+    url.searchParams.set("access_token", MAPBOX_TOKEN);
+    url.searchParams.set("language", "pt");
+    url.searchParams.set("limit", "1");
+    url.searchParams.set("types", "address,street");
+
+    const response = await fetch(url.toString());
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const feature = data.features?.[0];
+    if (!feature) return null;
+
+    const properties = feature.properties ?? {};
+
+    return properties.full_address || properties.name || null;
+  } catch {
+    return null;
+  }
+}
+
 type Persisted = {
+  avatarUrl?: string | null;
   cityId?: string | null;
   cart?: CartItem[];
   favorites?: string[];
@@ -65,6 +105,9 @@ function readPersisted(): Persisted {
 export function AppProvider({ children }: { children: ReactNode }) {
   const [locationStatus, setLocationStatus] = useState<LocationStatus>("idle");
   const [city, setCity] = useState<City | null>(null);
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [detectedLocationLabel, setDetectedLocationLabel] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
@@ -72,6 +115,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // Hidratação a partir do armazenamento local (nunca no primeiro render/SSR).
   useEffect(() => {
     const saved = readPersisted();
+    if (saved.avatarUrl) setAvatarUrl(saved.avatarUrl);
     if (saved.cityId) {
       const found = cities.find((c) => c.id === saved.cityId);
       if (found) {
@@ -86,13 +130,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!hydrated) return;
-    const payload: Persisted = { cityId: city?.id ?? null, cart, favorites };
+    const payload: Persisted = { cityId: city?.id ?? null, avatarUrl, cart, favorites };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
       /* armazenamento indisponível */
     }
-  }, [hydrated, city, cart, favorites]);
+  }, [hydrated, city, avatarUrl, cart, favorites]);
 
   const requestLocation = useCallback(() => {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
@@ -102,6 +146,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setLocationStatus("loading");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
+        setUserLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          accuracy: coords.accuracy,
+        });
+        void reverseGeocode(coords.latitude, coords.longitude).then((label) => {
+          setDetectedLocationLabel(label);
+        });
         const served = cities.filter((c) => c.served);
         let nearest: { city: City; km: number } | null = null;
         for (const candidate of served) {
@@ -180,6 +232,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return {
       locationStatus,
       city,
+      userLocation,
+      detectedLocationLabel,
+      avatarUrl,
+      setAvatarUrl,
       requestLocation,
       selectCity,
       cart,
@@ -197,6 +253,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [
     locationStatus,
     city,
+    userLocation,
+    detectedLocationLabel,
+    avatarUrl,
+    setAvatarUrl,
     requestLocation,
     selectCity,
     cart,
@@ -205,7 +265,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     removeFromCart,
     clearCart,
     favorites,
-    toggleFavorite,
   ]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

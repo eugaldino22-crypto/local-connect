@@ -28,7 +28,7 @@ export const Route = createFileRoute("/mapa")({
 });
 
 function MapPage() {
-  const { city } = useApp();
+  const { city, userLocation } = useApp();
   const merchants = listMerchants();
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string | null>(
@@ -74,6 +74,8 @@ function MapPage() {
             activeId={active?.id ?? null}
             onSelect={setActiveId}
             cityLabel={city ? `${city.name} · ${city.state}` : "sua região"}
+            userLocation={userLocation}
+            cityLocation={city ? { latitude: city.latitude, longitude: city.longitude } : null}
           />
         </div>
 

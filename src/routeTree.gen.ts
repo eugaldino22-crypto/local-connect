@@ -16,6 +16,7 @@ import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as MapaRouteImport } from './routes/mapa'
+import { Route as NotificacoesRouteImport } from './routes/notificacoes'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as PedidosIndexRouteImport } from './routes/pedidos.index'
@@ -56,6 +57,11 @@ const MapaRoute = MapaRouteImport.update({
   path: '/mapa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificacoesRoute = NotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PerfilRoute = PerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/favoritos': typeof FavoritosRoute
   '/mapa': typeof MapaRoute
+  '/notificacoes': typeof NotificacoesRoute
   '/perfil': typeof PerfilRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedidos/$orderId': typeof PedidosOrderIdRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/favoritos': typeof FavoritosRoute
   '/mapa': typeof MapaRoute
+  '/notificacoes': typeof NotificacoesRoute
   '/perfil': typeof PerfilRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedidos/$orderId': typeof PedidosOrderIdRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/favoritos': typeof FavoritosRoute
   '/mapa': typeof MapaRoute
+  '/notificacoes': typeof NotificacoesRoute
   '/perfil': typeof PerfilRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedidos/$orderId': typeof PedidosOrderIdRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/favoritos'
     | '/mapa'
+    | '/notificacoes'
     | '/perfil'
     | '/loja/$slug'
     | '/pedidos/$orderId'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/favoritos'
     | '/mapa'
+    | '/notificacoes'
     | '/perfil'
     | '/loja/$slug'
     | '/pedidos/$orderId'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/favoritos'
     | '/mapa'
+    | '/notificacoes'
     | '/perfil'
     | '/loja/$slug'
     | '/pedidos/$orderId'
@@ -167,6 +179,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   FavoritosRoute: typeof FavoritosRoute
   MapaRoute: typeof MapaRoute
+  NotificacoesRoute: typeof NotificacoesRoute
   PerfilRoute: typeof PerfilRoute
   LojaSlugRoute: typeof LojaSlugRoute
   PedidosOrderIdRoute: typeof PedidosOrderIdRoute
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MapaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notificacoes': {
+      id: '/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/notificacoes'
+      preLoaderRoute: typeof NotificacoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/perfil': {
       id: '/perfil'
       path: '/perfil'
@@ -263,6 +283,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   FavoritosRoute: FavoritosRoute,
   MapaRoute: MapaRoute,
+  NotificacoesRoute: NotificacoesRoute,
   PerfilRoute: PerfilRoute,
   LojaSlugRoute: LojaSlugRoute,
   PedidosOrderIdRoute: PedidosOrderIdRoute,

@@ -1,3 +1,4 @@
+import { useRef, type PointerEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { Bike, Star, Timer } from "lucide-react";
 
@@ -128,8 +129,38 @@ export function MerchantCard({
 }
 
 export function MerchantCarousel({ merchants }: { merchants: Merchant[] }) {
+  const railRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+  const startX = useRef(0);
+  const startScrollLeft = useRef(0);
+
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    const rail = railRef.current;
+    if (!rail) return;
+    dragging.current = true;
+    startX.current = event.clientX;
+    startScrollLeft.current = rail.scrollLeft;
+    rail.setPointerCapture(event.pointerId);
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!dragging.current) return;
+    const rail = railRef.current;
+    if (!rail) return;
+    const distance = event.clientX - startX.current;
+    rail.scrollLeft = startScrollLeft.current - distance;
+  };
+
+  const stopDragging = (event: PointerEvent<HTMLDivElement>) => {
+    dragging.current = false;
+    if (railRef.current?.hasPointerCapture(event.pointerId)) {
+      railRef.current.releasePointerCapture(event.pointerId);
+    }
+  };
+
   return (
-    <div className="rail gap-4 px-5 py-3">
+    <div ref={railRef} className="rail gap-4 px-5 py-3 cursor-grab select-none" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={stopDragging} onPointerCancel={stopDragging}>
       {merchants.map((merchant) => (
         <MerchantCard key={merchant.id} merchant={merchant} variant="rail" />
       ))}
