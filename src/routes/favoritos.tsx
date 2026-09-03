@@ -1,13 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Heart } from "lucide-react";
+import { useState } from "react";
 
 import { AppShell } from "@/components/vitrine/AppShell";
 import { EmptyState } from "@/components/vitrine/EmptyState";
 import { MerchantCard } from "@/components/vitrine/MerchantCard";
 import { PageHeader } from "@/components/vitrine/PageHeader";
 import { ProductCard } from "@/components/vitrine/ProductCard";
+import { ProductSheet } from "@/components/vitrine/ProductSheet";
 import { getMerchantById, getProductById } from "@/data/catalog";
 import { useApp } from "@/store/app-store";
+import type { Product } from "@/types";
 
 export const Route = createFileRoute("/favoritos")({
   head: () => ({
@@ -30,6 +33,7 @@ export const Route = createFileRoute("/favoritos")({
 
 function FavoritesPage() {
   const { favorites } = useApp();
+  const [selected, setSelected] = useState<Product | null>(null);
 
   const merchants = favorites
     .map((id) => getMerchantById(id))
@@ -77,7 +81,7 @@ function FavoritesPage() {
               <ul className="mt-3 grid grid-cols-2 gap-3">
                 {products.map((product) => (
                   <li key={product.id}>
-                    <ProductCard product={product} />
+                    <ProductCard product={product} onSelect={setSelected} />
                   </li>
                 ))}
               </ul>
@@ -85,6 +89,8 @@ function FavoritesPage() {
           )}
         </div>
       )}
+
+      <ProductSheet product={selected} onClose={() => setSelected(null)} />
     </AppShell>
   );
 }
