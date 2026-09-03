@@ -120,7 +120,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const found = cities.find((c) => c.id === saved.cityId);
       if (found) {
         setCity(found);
-        setLocationStatus("manual");
+
       }
     }
     if (saved.cart) setCart(saved.cart);

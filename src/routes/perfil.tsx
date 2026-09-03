@@ -14,8 +14,10 @@ import {
 } from "lucide-react";
 
 import { AppShell } from "@/components/vitrine/AppShell";
+import { ProtectedRoute } from "@/components/protected-route";
 import { savedAddresses } from "@/data/catalog";
 import { useApp } from "@/store/app-store";
+import { useAuth } from "@/hooks/useAuth";
 import type { LinkProps } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/perfil")({
@@ -34,7 +36,7 @@ export const Route = createFileRoute("/perfil")({
       },
     ],
   }),
-  component: ProfilePage,
+  component: ProfilePageWrapper,
 });
 
 type Item = {
@@ -42,6 +44,7 @@ type Item = {
   description: string;
   icon: typeof Heart;
   to?: NonNullable<LinkProps["to"]>;
+  onClick?: () => void;
 };
 
 const groups: { title: string; items: Item[] }[] = [
@@ -64,11 +67,13 @@ const groups: { title: string; items: Item[] }[] = [
         label: "Endereços",
         description: "Locais de entrega salvos",
         icon: MapPin,
+        to: "/buscar",
       },
       {
         label: "Formas de pagamento",
         description: "Pix, cartões e dinheiro",
         icon: CreditCard,
+        to: "/buscar",
       },
     ],
   },
@@ -79,6 +84,7 @@ const groups: { title: string; items: Item[] }[] = [
         label: "Notificações",
         description: "Promoções e status de pedidos",
         icon: Bell,
+        to: "/notificacoes",
       },
       {
         label: "Ajuda e suporte",
@@ -94,10 +100,23 @@ const groups: { title: string; items: Item[] }[] = [
   },
 ];
 
+function ProfilePageWrapper() {
+  return (
+    <ProtectedRoute>
+      <ProfilePage />
+    </ProtectedRoute>
+  );
+}
+
 function ProfilePage() {
   const { city, favorites, avatarUrl, setAvatarUrl, locationStatus, userLocation, detectedLocationLabel } = useApp();
+  const { user, signOut } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const address = savedAddresses[0];
+
+  const currentAvatar = user?.user_metadata?.avatar_url || user?.avatar_url || avatarUrl;
+  const userName = user?.user_metadata?.full_name || user?.email || "Visitante";
+  const userInitials = userName.slice(0, 2).toUpperCase();
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -132,14 +151,14 @@ function ProfilePage() {
               className="relative grid size-16 place-items-center overflow-hidden rounded-full bg-foreground text-lg font-bold text-background"
               aria-label="Adicionar foto de perfil"
             >
-              {avatarUrl ? (
+              {currentAvatar ? (
                 <img
-                  src={avatarUrl}
-                  alt="Foto de perfil"
+                  src={currentAvatar}
+                  alt={userName}
                   className="h-full w-full object-cover"
                 />
               ) : (
-                "VL"
+                userInitials
               )}
 
               <span className="absolute bottom-0 right-0 grid size-6 place-items-center rounded-full border-2 border-background bg-primary text-primary-foreground">
@@ -156,7 +175,7 @@ function ProfilePage() {
             />
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-xl font-bold">Visitante</h1>
+            <h1 className="truncate text-xl font-bold">{userName}</h1>
             <p className="truncate text-sm text-muted-foreground">
               {locationStatus === "granted" && userLocation ? detectedLocationLabel ? `📍 ${detectedLocationLabel}` : "📍 Localização atual" : city ? `${city.name} · ${city.state}` : "Localização não definida"}
             </p>
@@ -213,6 +232,7 @@ function ProfilePage() {
                   ) : (
                     <button
                       type="button"
+                      onClick={item.onClick}
                       className="press flex w-full items-center gap-3 px-4 py-3.5 text-left"
                     >
                       {content}
@@ -228,6 +248,7 @@ function ProfilePage() {
       <div className="px-5 pt-6">
         <button
           type="button"
+          onClick={() => signOut()}
           className="press flex h-12 w-full items-center justify-center gap-2 rounded-full border border-border bg-surface text-sm font-bold text-muted-foreground"
         >
           <LogOut className="size-4" /> Sair da conta

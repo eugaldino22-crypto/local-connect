@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 
 import { CitySelector } from "./CitySelector";
 import { useApp } from "@/store/app-store";
+import { useAuth } from "@/hooks/useAuth";
 
 export function LocationHeader() {
-  const { city, locationStatus, requestLocation, userLocation, detectedLocationLabel, avatarUrl } = useApp();
+  const { city, locationStatus, requestLocation, userLocation, detectedLocationLabel } = useApp();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
 
   // Tenta detectar a localização assim que o app abre, sem cidade fixa como fallback.
   useEffect(() => {
-    if (locationStatus === "idle" && !city) requestLocation();
+    if (locationStatus === "idle") requestLocation();
   }, [locationStatus, city, requestLocation]);
 
   const loading = locationStatus === "loading";
@@ -27,6 +29,11 @@ export function LocationHeader() {
           : locationStatus === "unserved"
             ? "Região sem atendimento"
             : "Escolher cidade";
+
+  // Resgate do Avatar ou Iniciais
+  const avatarUrl = user?.user_metadata?.avatar_url || user?.avatar_url;
+  const userName = user?.user_metadata?.full_name || user?.email || "VL";
+  const userInitials = userName.slice(0, 2).toUpperCase();
 
   return (
     <header className="sticky top-0 z-30 bg-background/95 backdrop-blur">
@@ -64,16 +71,16 @@ export function LocationHeader() {
           <Link
             to="/perfil"
             aria-label="Meu perfil"
-            className="press grid size-10 place-items-center rounded-2xl bg-foreground text-[13px] font-bold text-background"
+            className="press grid size-10 place-items-center overflow-hidden rounded-2xl bg-foreground text-[13px] font-bold text-background"
           >
             {avatarUrl ? (
               <img
                 src={avatarUrl}
-                alt="Foto de perfil"
-                className="h-full w-full rounded-2xl object-cover"
+                alt={userName}
+                className="h-full w-full object-cover"
               />
             ) : (
-              "VL"
+              userInitials
             )}
           </Link>
         </div>
