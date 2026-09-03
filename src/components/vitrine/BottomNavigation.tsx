@@ -55,7 +55,7 @@ function NavItem({
   icon: Icon,
   exact,
 }: {
-  to: LinkProps["to"];
+  to: NonNullable<LinkProps["to"]>;
   label: string;
   icon: typeof Home;
   exact: boolean;

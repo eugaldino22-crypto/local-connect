@@ -14,7 +14,9 @@ import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as CarrinhoRouteImport } from './routes/carrinho'
 import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as MapaRouteImport } from './routes/mapa'
+import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as PedidosIndexRouteImport } from './routes/pedidos.index'
 import { Route as PedidosOrderIdRouteImport } from './routes/pedidos.$orderId'
@@ -44,9 +46,19 @@ const CheckoutRoute = CheckoutRouteImport.update({
   path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MapaRoute = MapaRouteImport.update({
   id: '/mapa',
   path: '/mapa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LojaSlugRoute = LojaSlugRouteImport.update({
@@ -71,7 +83,9 @@ export interface FileRoutesByFullPath {
   '/carrinho': typeof CarrinhoRoute
   '/categorias': typeof CategoriasRoute
   '/checkout': typeof CheckoutRoute
+  '/favoritos': typeof FavoritosRoute
   '/mapa': typeof MapaRoute
+  '/perfil': typeof PerfilRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedidos/$orderId': typeof PedidosOrderIdRoute
   '/pedidos/': typeof PedidosIndexRoute
@@ -82,7 +96,9 @@ export interface FileRoutesByTo {
   '/carrinho': typeof CarrinhoRoute
   '/categorias': typeof CategoriasRoute
   '/checkout': typeof CheckoutRoute
+  '/favoritos': typeof FavoritosRoute
   '/mapa': typeof MapaRoute
+  '/perfil': typeof PerfilRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedidos/$orderId': typeof PedidosOrderIdRoute
   '/pedidos': typeof PedidosIndexRoute
@@ -94,7 +110,9 @@ export interface FileRoutesById {
   '/carrinho': typeof CarrinhoRoute
   '/categorias': typeof CategoriasRoute
   '/checkout': typeof CheckoutRoute
+  '/favoritos': typeof FavoritosRoute
   '/mapa': typeof MapaRoute
+  '/perfil': typeof PerfilRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/pedidos/$orderId': typeof PedidosOrderIdRoute
   '/pedidos/': typeof PedidosIndexRoute
@@ -107,7 +125,9 @@ export interface FileRouteTypes {
     | '/carrinho'
     | '/categorias'
     | '/checkout'
+    | '/favoritos'
     | '/mapa'
+    | '/perfil'
     | '/loja/$slug'
     | '/pedidos/$orderId'
     | '/pedidos/'
@@ -118,7 +138,9 @@ export interface FileRouteTypes {
     | '/carrinho'
     | '/categorias'
     | '/checkout'
+    | '/favoritos'
     | '/mapa'
+    | '/perfil'
     | '/loja/$slug'
     | '/pedidos/$orderId'
     | '/pedidos'
@@ -129,7 +151,9 @@ export interface FileRouteTypes {
     | '/carrinho'
     | '/categorias'
     | '/checkout'
+    | '/favoritos'
     | '/mapa'
+    | '/perfil'
     | '/loja/$slug'
     | '/pedidos/$orderId'
     | '/pedidos/'
@@ -141,7 +165,9 @@ export interface RootRouteChildren {
   CarrinhoRoute: typeof CarrinhoRoute
   CategoriasRoute: typeof CategoriasRoute
   CheckoutRoute: typeof CheckoutRoute
+  FavoritosRoute: typeof FavoritosRoute
   MapaRoute: typeof MapaRoute
+  PerfilRoute: typeof PerfilRoute
   LojaSlugRoute: typeof LojaSlugRoute
   PedidosOrderIdRoute: typeof PedidosOrderIdRoute
   PedidosIndexRoute: typeof PedidosIndexRoute
@@ -184,11 +210,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mapa': {
       id: '/mapa'
       path: '/mapa'
       fullPath: '/mapa'
       preLoaderRoute: typeof MapaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/loja/$slug': {
@@ -221,7 +261,9 @@ const rootRouteChildren: RootRouteChildren = {
   CarrinhoRoute: CarrinhoRoute,
   CategoriasRoute: CategoriasRoute,
   CheckoutRoute: CheckoutRoute,
+  FavoritosRoute: FavoritosRoute,
   MapaRoute: MapaRoute,
+  PerfilRoute: PerfilRoute,
   LojaSlugRoute: LojaSlugRoute,
   PedidosOrderIdRoute: PedidosOrderIdRoute,
   PedidosIndexRoute: PedidosIndexRoute,
