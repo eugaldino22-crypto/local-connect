@@ -15,16 +15,7 @@ import coverPadaria from "@/assets/merchant-padaria.jpg";
 import coverFarmacia from "@/assets/merchant-farmacia.jpg";
 import coverDoces from "@/assets/merchant-doces.jpg";
 
-export const cities: City[] = [
-  { id: "itabaiana-se", name: "Itabaiana", state: "SE", latitude: -10.6853, longitude: -37.4256, served: true },
-  { id: "aracaju-se", name: "Aracaju", state: "SE", latitude: -10.9472, longitude: -37.0731, served: true },
-  { id: "lagarto-se", name: "Lagarto", state: "SE", latitude: -10.9166, longitude: -37.6672, served: true },
-  { id: "estancia-se", name: "Estância", state: "SE", latitude: -11.2679, longitude: -37.4382, served: true },
-  { id: "sao-cristovao-se", name: "São Cristóvão", state: "SE", latitude: -11.0146, longitude: -37.2064, served: true },
-  { id: "nossa-senhora-do-socorro-se", name: "Nossa Senhora do Socorro", state: "SE", latitude: -10.855, longitude: -37.1258, served: true },
-  { id: "campo-do-brito-se", name: "Campo do Brito", state: "SE", latitude: -10.7367, longitude: -37.4931, served: true },
-  { id: "ribeiropolis-se", name: "Ribeirópolis", state: "SE", latitude: -10.5375, longitude: -37.4383, served: true },
-];
+export const cities: City[] = [];
 
 export const categories: Category[] = [
   { id: "lanches", slug: "lanches", name: "Lanches", emoji: "🍔" },

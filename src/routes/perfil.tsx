@@ -11,6 +11,7 @@ import {
   ReceiptText,
   Store,
   Camera,
+  ShieldCheck,
 } from "lucide-react";
 
 import { AppShell } from "@/components/vitrine/AppShell";
@@ -47,59 +48,6 @@ type Item = {
   onClick?: () => void;
 };
 
-const groups: { title: string; items: Item[] }[] = [
-  {
-    title: "Minha conta",
-    items: [
-      {
-        label: "Favoritos",
-        description: "Lojas e produtos salvos",
-        icon: Heart,
-        to: "/favoritos",
-      },
-      {
-        label: "Meus pedidos",
-        description: "Histórico e acompanhamento",
-        icon: ReceiptText,
-        to: "/pedidos",
-      },
-      {
-        label: "Endereços",
-        description: "Locais de entrega salvos",
-        icon: MapPin,
-        to: "/buscar",
-      },
-      {
-        label: "Formas de pagamento",
-        description: "Pix, cartões e dinheiro",
-        icon: CreditCard,
-        to: "/buscar",
-      },
-    ],
-  },
-  {
-    title: "Preferências",
-    items: [
-      {
-        label: "Notificações",
-        description: "Promoções e status de pedidos",
-        icon: Bell,
-        to: "/notificacoes",
-      },
-      {
-        label: "Ajuda e suporte",
-        description: "Fale com a nossa equipe",
-        icon: HelpCircle,
-      },
-      {
-        label: "Quero vender no Vitrine Local",
-        description: "Cadastre seu comércio",
-        icon: Store,
-      },
-    ],
-  },
-];
-
 function ProfilePageWrapper() {
   return (
     <ProtectedRoute>
@@ -110,13 +58,75 @@ function ProfilePageWrapper() {
 
 function ProfilePage() {
   const { city, favorites, avatarUrl, setAvatarUrl, locationStatus, userLocation, detectedLocationLabel } = useApp();
-  const { user, signOut } = useAuth();
+  const { user, profile, roles, signOut } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const address = savedAddresses[0];
 
-  const currentAvatar = user?.user_metadata?.avatar_url || user?.avatar_url || avatarUrl;
-  const userName = user?.user_metadata?.full_name || user?.email || "Visitante";
+  const currentAvatar = profile?.avatar_url || user?.user_metadata?.avatar_url || user?.avatar_url || avatarUrl;
+  const userName = profile?.full_name || user?.user_metadata?.full_name || user?.email || "Visitante";
   const userInitials = userName.slice(0, 2).toUpperCase();
+
+  const isMerchant = roles.includes("merchant") || roles.includes("admin") || profile?.role === "merchant" || profile?.role === "admin";
+
+  const groups: { title: string; items: Item[] }[] = [
+    {
+      title: "Minha conta",
+      items: [
+        {
+          label: "Favoritos",
+          description: "Lojas e produtos salvos",
+          icon: Heart,
+          to: "/favoritos",
+        },
+        {
+          label: "Meus pedidos",
+          description: "Histórico e acompanhamento",
+          icon: ReceiptText,
+          to: "/pedidos",
+        },
+        {
+          label: "Endereços",
+          description: "Locais de entrega salvos",
+          icon: MapPin,
+          to: "/buscar",
+        },
+        {
+          label: "Formas de pagamento",
+          description: "Pix, cartões e dinheiro",
+          icon: CreditCard,
+          to: "/buscar",
+        },
+      ],
+    },
+    {
+      title: "Preferências",
+      items: [
+        {
+          label: "Notificações",
+          description: "Promoções e status de pedidos",
+          icon: Bell,
+          to: "/notificacoes",
+        },
+        {
+          label: "Ajuda e suporte",
+          description: "Fale com a nossa equipe",
+          icon: HelpCircle,
+        },
+        isMerchant
+          ? {
+              label: "Painel do Lojista",
+              description: "Gerenciar produtos e pedidos",
+              icon: ShieldCheck,
+              to: "/merchant",
+            }
+          : {
+              label: "Quero vender no Vitrine Local",
+              description: "Cadastre seu comércio",
+              icon: Store,
+            },
+      ],
+    },
+  ];
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -177,7 +187,13 @@ function ProfilePage() {
           <div className="min-w-0">
             <h1 className="truncate text-xl font-bold">{userName}</h1>
             <p className="truncate text-sm text-muted-foreground">
-              {locationStatus === "granted" && userLocation ? detectedLocationLabel ? `📍 ${detectedLocationLabel}` : "📍 Localização atual" : city ? `${city.name} · ${city.state}` : "Localização não definida"}
+              {locationStatus === "granted" && userLocation
+                ? detectedLocationLabel
+                  ? `📍 ${detectedLocationLabel}`
+                  : "📍 Localização atual"
+                : city
+                ? `${city.name} · ${city.state}`
+                : "Localização não definida"}
             </p>
           </div>
         </div>

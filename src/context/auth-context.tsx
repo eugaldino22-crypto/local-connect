@@ -51,11 +51,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (rolesError) {
         console.error("Erro ao buscar roles:", rolesError.message);
-      } else if (rolesData) {
+        setRoles(["customer"]);
+      } else if (rolesData && rolesData.length > 0) {
         setRoles(rolesData.map((r) => r.role as AppRole));
+      } else {
+        setRoles(["customer"]);
       }
     } catch (err) {
       console.error("Erro ao carregar dados do usuário:", err);
+      setRoles(["customer"]);
     }
   };
 
